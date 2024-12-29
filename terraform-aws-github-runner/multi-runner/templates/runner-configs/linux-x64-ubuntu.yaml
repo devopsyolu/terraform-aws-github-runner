@@ -22,7 +22,7 @@ runner_config:
   runners_maximum_count: 2
   delay_webhook_event: 30
   scale_up_reserved_concurrent_executions: -1
-  scale_down_schedule_expression: cron(5 * * * ? *)
+  scale_down_schedule_expression: cron(*/5 * * * *)
   # enable_organization_runners: true
   userdata_template: ./templates/user-data.sh
   ami_owners:
