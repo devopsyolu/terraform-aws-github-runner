@@ -32,7 +32,7 @@ resource "random_id" "random" {
 
 module "github-runner_multi-runner" {
   source  = "philips-labs/github-runner/aws//modules/multi-runner"
-  version = "6.0.0"
+  version = "5.21.0"
   # insert the 5 required variables here
   multi_runner_config = local.multi_runner_config
   aws_region                        = local.aws_region
@@ -48,13 +48,6 @@ module "github-runner_multi-runner" {
     key_base64     = var.github_app.key_base64
     id             = var.github_app.id
     webhook_secret = random_id.random.hex
-  }
-
-  # Deploy webhook using the EventBridge
-  eventbridge = {
-    enable = true
-    # adjust the allow events to only allow specific events, like workflow_job
-    accept_events = ["workflow_job"]
   }
 
   # enable this section for tracing
@@ -99,4 +92,8 @@ module "webhook_github_app" {
     webhook_secret = random_id.random.hex
   }
   webhook_endpoint = module.github-runner_multi-runner.webhook.endpoint
+}
+
+resource "aws_iam_service_linked_role" "spot" {
+  aws_service_name = "spot.amazonaws.com"
 }

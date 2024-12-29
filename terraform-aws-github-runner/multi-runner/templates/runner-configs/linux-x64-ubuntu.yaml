@@ -8,7 +8,6 @@ redrive_build_queue:
   enabled: false
   maxReceiveCount: null
 runner_config:
-  scale_up_reserved_concurrent_executions: -1
   runner_os: linux
   runner_architecture: x64
   runner_run_as: ubuntu
@@ -21,7 +20,8 @@ runner_config:
     - m5a.large
   runners_maximum_count: 2
   delay_webhook_event: 30
-  scale_down_schedule_expression: cron(* * * * ? *)
+  scale_up_reserved_concurrent_executions: -1
+  scale_down_schedule_expression: cron(5 * * * ? *)
   userdata_template: ./templates/user-data.sh
   ami_owners:
     - "099720109477" # Canonical's Amazon account ID

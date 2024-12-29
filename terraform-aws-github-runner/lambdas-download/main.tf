@@ -1,6 +1,6 @@
 module "lambdas" {
   source  = "philips-labs/github-runner/aws//modules/download-lambda"
-  version = "6.0.0"
+  version = "5.21.0"
   lambdas = [
     {
       name = "webhook"
