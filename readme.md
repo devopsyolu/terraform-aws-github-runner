@@ -13,8 +13,13 @@ Temel olarak [github-aws-runners/terraform-aws-github-runner](https://github.com
 
 1. **AWS Hesabı**: Yeterli izinlere sahip bir IAM kullanıcı hesabı.  
 2. **Terraform**: 1.0.0 veya üzeri bir sürüm (önerilir).  
-3. **GitHub PAT (Personal Access Token)**: GitHub Runner kaydı yapmak için gerekli.  
 
 ## Kurulum ve Kullanım
 
 https://github.com/jonico/awesome-runners buradaki runner yaklaşımları arasında yer alır.
+
+cd lambdas-download
+terraform init && terraform apply
+
+cd ../multi-runner
+terraform init && terraform apply

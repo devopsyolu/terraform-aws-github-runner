@@ -30,14 +30,22 @@ resource "random_id" "random" {
   byte_length = 20
 }
 
+data "aws_ssm_parameter" "github_app_id" { # Ilk kullanimda variable olarak atayip ardindan bu sekilde kullanabilirsiniz.
+  name = "/github-action-runners/runner/app/github_app_id"
+}
+
+data "aws_ssm_parameter" "github_app_key_base64" { # Ilk kullanimda variable olarak atayip ardindan bu sekilde kullanabilirsiniz.
+  name = "/github-action-runners/runner/app/github_app_key_base64"
+}
+
 module "github-runner_multi-runner" {
   source  = "philips-labs/github-runner/aws//modules/multi-runner"
   version = "5.21.0"
   # insert the 5 required variables here
   multi_runner_config = local.multi_runner_config
   aws_region                        = local.aws_region
-  vpc_id                            = "vpc-01bba5a6501e760e7"
-  subnet_ids                        = ["subnet-0583bef60a534450c","subnet-0562d708ddbcc814a"]
+  vpc_id                            = "vpc-01bba5a6501e760e7" # Degismesi gerekiyor
+  subnet_ids                        = ["subnet-0583bef60a534450c","subnet-0562d708ddbcc814a"] # Degismesi gerekiyor
   runners_scale_up_lambda_timeout   = 60
   runners_scale_down_lambda_timeout = 60
   prefix                            = local.environment
@@ -45,8 +53,8 @@ module "github-runner_multi-runner" {
     cost = "runner"
   }
   github_app = {
-    key_base64     = var.github_app.key_base64
-    id             = var.github_app.id
+    key_base64     = data.aws_ssm_parameter.github_app_key_base64.value
+    id             = data.aws_ssm_parameter.github_app_id.value
     webhook_secret = random_id.random.hex
   }
 
@@ -83,12 +91,12 @@ module "github-runner_multi-runner" {
 
 module "webhook_github_app" {
   source  = "philips-labs/github-runner/aws//modules/webhook-github-app"
-  version = "6.0.0"
+  version = "5.21.0"
   depends_on = [module.github-runner_multi-runner]
 
   github_app = {
-    key_base64     = var.github_app.key_base64
-    id             = var.github_app.id
+    key_base64     = data.aws_ssm_parameter.github_app_key_base64.value
+    id             = data.aws_ssm_parameter.github_app_id.value
     webhook_secret = random_id.random.hex
   }
   webhook_endpoint = module.github-runner_multi-runner.webhook.endpoint
